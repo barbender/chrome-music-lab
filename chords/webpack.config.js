@@ -38,7 +38,8 @@ module.exports = {
 		sourceMapFilename : "[file].map"
 	},
 	resolve: {
-		modules: ["node_modules", "style", "third_party/Tone.js/", "app", "third_party/"]
+        // modules: ["node_modules", "style", "third_party/Tone.js/", "app", "third_party/"]
+        modules: ["node_modules", "node_modules/tone", "style", "app"]
 	},
     plugins: PROD ?
         [

@@ -21,7 +21,8 @@
     "soundfont-player": "^0.4.0",
     "startaudiocontext": "^1.1.0",
     "style-loader": "*",
-    "teoria": "^2.1.1",
+    "teoria": "^2.5.0",
+    "tone": "^0.11.11",
     "url-loader": "*",
     "webfontloader": "^1.6.10",
     "webpack": "*"
