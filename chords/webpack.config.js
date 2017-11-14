@@ -15,32 +15,59 @@
  */
 
 var webpack = require("webpack");
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+const DEBUG = process.env.NODE_ENV !== 'production';
 
 var PROD = JSON.parse(process.env.PROD_ENV || '0');
+console .log('production', PROD);
+
+const extractCss = new ExtractTextPlugin({
+    filename: '[name].css',
+    disable: DEBUG
+});
 
 module.exports = {
 	"context": __dirname,
 	entry: {
-		"Main": "app/Main",
+		"Main": "./app/Main.js"
 	},
 	output: {
 		filename: "./build/[name].js",
 		chunkFilename: "./build/[id].js",
-		sourceMapFilename : "[file].map",
+		sourceMapFilename : "[file].map"
 	},
 	resolve: {
-		root: __dirname,
-		modulesDirectories : ["node_modules", "style", "third_party/Tone.js/", "app", "third_party/"],
+		modules: ["node_modules", "style", "third_party/Tone.js/", "app", "third_party/"]
 	},
-	plugins: PROD ? [
-	    new webpack.optimize.UglifyJsPlugin({minimize: true})
-	  ] : [],
+    plugins: PROD ?
+        [
+            extractCss,
+            new webpack.optimize.UglifyJsPlugin({minimize: true})
+        ] :
+        [
+            extractCss
+        ],
 	 module: {
 		loaders: [
-			{
-				test: /\.scss$/,
-				loader: "style!css!autoprefixer!sass"
-			},
+            {
+                test: /\.scss$/,
+                use: extractCss.extract({
+                    use: [{
+                        loader: "css-loader",
+                        options: {
+                            sourceMap: DEBUG
+                        }
+                    }, {
+                        loader: "sass-loader",
+                        options: {
+                            sourceMap: DEBUG
+                        }
+                    }],
+                    // use style-loader in development
+                    fallback: "style-loader"
+                })
+            },
 			{
 				test: /\.json$/,
 				loader: "json-loader"

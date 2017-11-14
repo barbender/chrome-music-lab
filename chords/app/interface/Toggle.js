@@ -14,24 +14,26 @@
  * limitations under the License.
  */
 
-define(["style/toggle.scss", "interface/ToggleSwitch", "Translation"], function (toggleStyle, Toggle, Translate) {
+import Toggle from 'interface/ToggleSwitch'
+import Translate from 'Translation'
+import '../../style/toggle.scss'
 
-	var ModeToggle = function(container){
+var ModeToggle = function (container) {
 
-		this.element = document.createElement("DIV");
-		this.element.id = "ToggleContainer";
-		container.appendChild(this.element);
+    this.element = document.createElement("DIV");
+    this.element.id = "ToggleContainer";
+    container.appendChild(this.element);
 
-		this.toggle = new Toggle(this.element, Translate.localize("Chords_UI_Minor"), Translate.localize("Chords_UI_Major"), true);
+    this.toggle = new Toggle(this.element, Translate.localize("Chords_UI_Minor"), Translate.localize("Chords_UI_Major"), true);
 
-		this.toggle.onchange = this.toggled.bind(this);
+    this.toggle.onchange = this.toggled.bind(this);
 
-		this.onChange = function(){};
-	};
+    this.onChange = function () {
+    };
+};
 
-	ModeToggle.prototype.toggled = function(val){
-		this.onChange(val ? "major" : "minor");
-	};
+ModeToggle.prototype.toggled = function (val) {
+    this.onChange(val ? "major" : "minor");
+};
 
-	return ModeToggle;
-});
+export default ModeToggle

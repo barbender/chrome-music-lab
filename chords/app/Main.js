@@ -13,55 +13,58 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import domready from 'domready'
+import '../style/main.scss'
+import Piano from 'interface/Piano'
+import Arp from 'sound/Arp'
+import ChordLabel from "interface/ChordLabel"
+import Toggle from "interface/Toggle"
+import StartiOS from 'StartiOS'
+import Translation from 'Translation'
 
-require(["domready", "main.scss", "interface/Piano", "sound/Arp", "interface/ChordLabel", 
-	"interface/Toggle", "StartiOS", "Translation"], 
-	function(domready, mainStyle, Piano, Arp, ChordLabel, Toggle, StartiOS, Translation){
+//get the origin
 
-	//get the origin
+var lang = "en";
 
-	var lang = "en";
+if (window.location.search !== "") {
+    lang = window.location.search.substring(4);
+}
 
-	if (window.location.search !== ""){
-		lang = window.location.search.substring(4);
-	}
-	
-	Translation.load(lang, function(){
-		domready(function(){
+Translation.load(lang, function () {
+    domready(function () {
 
-			//the main box
-			var container = document.createElement("DIV");
-			container.id = "Container";
-			document.body.appendChild(container);
+        //the main box
+        var container = document.createElement("DIV");
+        container.id = "Container";
+        document.body.appendChild(container);
 
-			var lowestNote = "C3";
-			var highestNote = "C5";
+        var lowestNote = "C3";
+        var highestNote = "C5";
 
-			var label = new ChordLabel(container);
+        var label = new ChordLabel(container);
 
-			//the piano
-			var piano = new Piano(container, lowestNote, highestNote);
+        //the piano
+        var piano = new Piano(container, lowestNote, highestNote);
 
-			var arp = new Arp(piano.delayTime, lowestNote, "G5");
+        var arp = new Arp(piano.delayTime, lowestNote, "G5");
 
-			arp.load(function(){
-				window.parent.postMessage("loaded", "*");
-				StartiOS();
-			});
+        arp.load(function () {
+            window.parent.postMessage("loaded", "*");
+            StartiOS();
+        });
 
-			var toggle = new Toggle(container);
+        var toggle = new Toggle(container);
 
-			var chordSelected = false;
+        var chordSelected = false;
 
-			piano.onNotes = function(notes, root, mode){
-				chordSelected = true;
-				arp.play(notes);
-				label.setChord(root, mode);
-			};
+        piano.onNotes = function (notes, root, mode) {
+            chordSelected = true;
+            arp.play(notes);
+            label.setChord(root, mode);
+        };
 
-			toggle.onChange = function(mode){
-				piano.setMode(mode);
-			};
-		});
-	});
+        toggle.onChange = function (mode) {
+            piano.setMode(mode);
+        };
+    });
 });
